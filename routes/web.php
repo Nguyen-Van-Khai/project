@@ -26,7 +26,7 @@ Route::group(['prefix'=>'backend'], function (){
         Route::get('', [ProductController::class, 'index']);
         Route::get('create', [ProductController::class, 'create']);
         Route::post('store', [ProductController::class, 'store']);
-        Route::get('delete/{id}', [ProductController::class, 'delete'])->name('product.delete');
+        Route::delete('delete/{id}', [ProductController::class, 'delete']);
         Route::get('edit/{id}', [ProductController::class, 'edit']);
         Route::put('update/{id}', [ProductController::class, 'update']);
     });

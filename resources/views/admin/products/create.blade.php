@@ -50,7 +50,7 @@
     <!-- end dashboard inner -->
 @endsection
 
-@push('scripts')
+@push('script')
     <script>
         var loadFile = function (event) {
             var reader = new FileReader();

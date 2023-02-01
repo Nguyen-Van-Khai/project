@@ -15,11 +15,11 @@
                     <div class="table_section padding_infor_info">
                         <div class="table-responsive-sm">
                             <div class="heading1 margin_0">
-                                @if(session()->has('success'))
+                                @if(session('success'))
                                     <h2 class="text-danger"> {{session()->get('success') }}</h2>
                                 @endif
 
-                                @if(session()->has('error'))
+                                @if(session('error'))
                                     <h2 class="text-danger"> {{session()->get('error')}}</h2>
                                 @endif
                             </div>
@@ -49,8 +49,9 @@
                                         <td>{{$product->description}}</td>
                                         <td>
                                             <a class="btn btn-secondary" href="{{url('backend/product/edit', $product->id)}}">Edit</a>
-                                            <a class="btn btn-danger" href="{{route('product.delete', $product->id)}}"
-                                               onclick="return confirm('Xac nhan xoa ?')">Delete</a>
+                                            <button class="btn btn-danger" onclick="PRODUCT.DELETE('{{$product->id}}')">
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -67,3 +68,28 @@
     </div>
     <!-- end dashboard inner -->
 @endsection
+@push('script')
+    <script>
+        const PRODUCT = {
+            DELETE: async (id) => {
+                try{
+                    const isConf = confirm('Xoa ?')
+                    if(!isConf) return;
+                    console.log(id);
+                    await $.ajax(
+                        {
+                            url: `/backend/product/delete/${id}`,
+                            type: 'delete',
+                            data: {_token: '{{csrf_token()}}'}
+                        }
+                    );
+                    window.location.reload();
+                }catch (e){
+                    console.log(e);
+                }
+            }
+
+        }
+    </script>
+
+@endpush

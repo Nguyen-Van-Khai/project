@@ -23,16 +23,6 @@ class ProductRepository implements ProductInterface {
     public function updateProduct($data, $id)
     {
         $product = Product::query()->where('id', $id)->first();
-        if(isset($data['avatar'])){
-            $avatar = $data['avatar']->getClientOriginalName();
-            $avatar = time().'-'.$avatar;
-            if(file_exists(public_path('uploads/'.$product->avatar))){
-                unlink(public_path('uploads/'.$product->avatar));
-            }
-            $data['avatar']->move(public_path('uploads'), $avatar);
-            $data['avatar'] = $avatar;
-        }
-
         return $product->update($data);
     }
 
