@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Request;
 use App\Repositories\ProductInterface;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\Http;
+use Psy\Util\Json;
 
 class ProductController extends Controller
 {
@@ -18,17 +20,23 @@ class ProductController extends Controller
     }
 
     public function index(){
+        $response = Http::get('http://localhost/laravel-project/public/api/products');
+        $products = $response->json()['data'];
 
-        $products = $this->productRepository->allProduct();
         return view('admin.products.index', compact('products'));
     }
+
     public function create(){
         return view('admin.products.create');
     }
+
     public function store(Request $request){
         $data = $request->all();
         $data['avatar'] = $this->productService->createImage($request);
-        $checkCreate = $this->productRepository->storeProduct($data);
+        $checkCreate = Http::asForm()->post('http://localhost/laravel-project/public/api/products', $data);
+//        $data = $request->all();
+//        $data['avatar'] = $this->productService->createImage($request);
+//        $checkCreate = $this->productRepository->storeProduct($data);
         if (!empty($checkCreate)) {
             return redirect(url('backend/product'))->with('success', 'Thêm mới thành công');
         } else {
@@ -36,25 +44,22 @@ class ProductController extends Controller
         }
     }
     public function edit($id){
-        $product = $this->productRepository->findProduct($id);
+        $res = Http::get('http://localhost/laravel-project/public/api/products/'.$id);
+        $product = json_decode($res)->data;
         return view('admin.products.update', compact('product'));
     }
     public function update(Request $request, $id){
+//        $data = $request->all();
+//        $data['avatar'] = $this->productService->handleImage($request, $id);
+//        $checkUpdate = $this->productRepository->updateProduct($data, $id);
         $data = $request->all();
-        $data['avatar'] = $this->productService->handleImage($request, $id);
-        $checkUpdate = $this->productRepository->updateProduct($data, $id);
+        $data['avatar'] = $this->productService->createImage($request);
+        $checkUpdate = Http::asForm()->put('http://localhost/laravel-project/public/api/products/'.$id, $data);
+        dd(json_decode($checkUpdate));
         if (!empty($checkUpdate)) {
             return redirect(url('backend/product'))->with('success', 'Update thành công');
         } else {
             return redirect(url('backend/product'))->with('error', 'Update thất bại');
         }
-    }
-
-    public function delete($id){
-        return response()->json(
-            [
-                'success' => $this->productRepository->deleteProduct($id)
-            ]
-        );
     }
 }

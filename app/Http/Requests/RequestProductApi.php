@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 
 
-class Request extends FormRequest
+class RequestProductApi extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -40,7 +40,7 @@ class Request extends FormRequest
         return [
             'name' => ['required', 'min:3'],
             'price' => ['required', 'numeric'],
-            'avatar' => ['image', 'max:2048'],
+            'avatar' => ['required'],
             'description' =>['required']
         ];
     }
@@ -51,10 +51,17 @@ class Request extends FormRequest
             'name.min' => 'Tên ít nhất 3 ký tự',
             'price.required' => 'Giá phải nhập',
             'price.numeric' => 'Giả phải là số',
-            'avatar.image' => 'File upload phải là ảnh',
-            'avatar.max' => 'File upload ko đc vượt quá 2MB',
+            'avatar.required' => 'Hinh anh khong duoc trong',
             'description.required' => 'Mô tả không được để trống'
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json(
+            [
+                'error' => $validator->errors(),
+                'status_code' => 422,
+            ], JsonResponse::HTTP_UNPROCESSABLE_ENTITY));
     }
 
 }
