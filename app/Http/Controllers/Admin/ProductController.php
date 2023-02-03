@@ -21,7 +21,8 @@ class ProductController extends Controller
 
     public function index(){
         $response = Http::get('http://localhost/laravel-project/public/api/products');
-        $products = $response->json()['data'];
+//        dd(json_decode($response)->data);
+        $products = json_decode($response)->data->data;
 
         return view('admin.products.index', compact('products'));
     }
@@ -55,7 +56,6 @@ class ProductController extends Controller
         $data = $request->all();
         $data['avatar'] = $this->productService->createImage($request);
         $checkUpdate = Http::asForm()->put('http://localhost/laravel-project/public/api/products/'.$id, $data);
-        dd(json_decode($checkUpdate));
         if (!empty($checkUpdate)) {
             return redirect(url('backend/product'))->with('success', 'Update thành công');
         } else {

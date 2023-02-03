@@ -19,9 +19,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix'=>'backend'], function (){
+Route::group(['middleware' => 'checkLogin','prefix'=>'backend'], function (){
     Route::get('dashboard', [DashboardController::class, 'index']);
-
     Route::group(['prefix'=>'product'], function (){
         Route::get('', [ProductController::class, 'index']);
         Route::get('create', [ProductController::class, 'create']);
@@ -31,4 +30,10 @@ Route::group(['prefix'=>'backend'], function (){
         Route::put('update/{id}', [ProductController::class, 'update']);
     });
 });
+
+Route::group(['prefix'=>'user'], function (){
+    Route::match(['GET', 'POST'],'login', [\App\Http\Controllers\Admin\AuthController::class, 'login']);
+});
+
+Route::get('test', [\App\Http\Controllers\Admin\AuthController::class, 'Test'])->name('test');
 

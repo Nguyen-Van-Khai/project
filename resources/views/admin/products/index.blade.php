@@ -35,21 +35,21 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($products['data'] as $key=>$product)
+                                @foreach($products as $key=>$product)
                                     <tr>
                                         <td>{{++$key}}</td>
-                                        <td>{{$product['name']}}</td>
+                                        <td>{{$product->name}}</td>
                                         <td>
-                                            @if(!empty($product['avatar']))
-                                                <img src="{{ asset('uploads/' . $product['avatar']) }}"
+                                            @if(!empty($product->avatar))
+                                                <img src="{{ asset('uploads/' . $product->avatar) }}"
                                                      height="100px"/>
                                             @endif
                                         </td>
-                                        <td>{{number_format($product['price']) }}</td>
-                                        <td>{{$product['description']}}</td>
+                                        <td>{{number_format($product->price) }}</td>
+                                        <td>{{$product->description}}</td>
                                         <td>
-                                            <a class="btn btn-secondary" href="{{url('backend/product/edit', $product['id'])}}">Edit</a>
-                                            <button class="btn btn-danger" onclick="PRODUCT.DELETE('{{$product['id']}}')">
+                                            <a class="btn btn-secondary" href="{{url('backend/product/edit', $product->id)}}">Edit</a>
+                                            <button class="btn btn-danger" onclick="PRODUCT.DELETE('{{$product->id}}')">
                                                 Delete
                                             </button>
                                         </td>
