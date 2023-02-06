@@ -32,8 +32,7 @@ Route::group(['middleware' => 'checkLogin','prefix'=>'backend'], function (){
 });
 
 Route::group(['prefix'=>'user'], function (){
-    Route::match(['GET', 'POST'],'login', [\App\Http\Controllers\Admin\AuthController::class, 'login']);
+    Route::match(['GET', 'POST'],'login', [\App\Http\Controllers\Admin\AuthController::class, 'login'])->name('login');
+    Route::get('logout', [\App\Http\Controllers\Admin\AuthController::class, 'logout']);
 });
-
-Route::get('test', [\App\Http\Controllers\Admin\AuthController::class, 'Test'])->name('test');
 

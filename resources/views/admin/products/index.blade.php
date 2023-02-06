@@ -79,7 +79,7 @@
                         {
                             url: `http://localhost/laravel-project/public/api/products/${id}`,
                             type: 'delete',
-                            data: {_token: '{{csrf_token()}}'},
+                            data:id,
                             success: function (data){
                                 console.log(data);
                             }

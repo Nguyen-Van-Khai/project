@@ -14,26 +14,25 @@ class AuthController extends Controller
                 'name' => 'required',
                 'password' => 'required|string|min:6',
             ]);
-//            dd($request->all());
             $credentials = $request->only('name', 'password');
             $checkLogin = Http::asForm()->post('http://localhost/laravel-project/public/api/auth/login', $credentials);
-//            dd(json_decode($checkLogin));
-            if(json_decode($checkLogin)){
-                return redirect(url('backend/dashboard'));
+            $info = json_decode($checkLogin);
+            if(!empty($info->access_token)){
+                session()->put('access_token', $info->access_token);
             }
-
+            if(session()->has('access_token') && !empty(session()->get('access_token'))){
+                return redirect(url('backend/dashboard'));
+            }else{
+                return redirect(url('user/login'))->with('error', 'Sai tai khoan mat khau');
+            }
         }
-
         return view('admin.users.login');
     }
 
     public function logout(){
-        Http::asForm()->withHeaders()->post('http://localhost/laravel-project/public/api/auth/login');
-        return redirect(url('user/login'));
+        $accessToken = session()->get('access_token');
+        $checkLogout = Http::withToken($accessToken)->post('http://localhost/laravel-project/public/api/auth/logout');
+        session()->forget('access_token');
+        return redirect(url('user/login'))->with('success', 'Logout success!');
     }
-    public function test(){
-        return response()->json('Chua login');
-    }
-
-
 }

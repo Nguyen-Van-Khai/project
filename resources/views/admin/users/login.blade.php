@@ -60,10 +60,12 @@
                             <div class="field">
                                 <label class="label_field">Username</label>
                                 <input type="text" name="name" />
+                                <span class="text-danger">{{ $errors->first('name') }}</span>
                             </div>
                             <div class="field">
                                 <label class="label_field">Password</label>
                                 <input type="password" name="password"  />
+                                <span class="text-danger">{{ $errors->first('password') }}</span>
                             </div>
                             <div class="field">
                                 <label class="label_field hidden">hidden label</label>

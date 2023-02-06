@@ -20,7 +20,7 @@ class ProductController extends Controller
     }
 
     public function index(){
-        $response = Http::get('http://localhost/laravel-project/public/api/products');
+        $response = Http::withHeaders(['Authorization'=>'bearer'.session()->get('access_token')])->get('http://localhost/laravel-project/public/api/products');
 //        dd(json_decode($response)->data);
         $products = json_decode($response)->data->data;
 
@@ -34,7 +34,7 @@ class ProductController extends Controller
     public function store(Request $request){
         $data = $request->all();
         $data['avatar'] = $this->productService->createImage($request);
-        $checkCreate = Http::asForm()->post('http://localhost/laravel-project/public/api/products', $data);
+        $checkCreate = Http::withToken(session()->get('access_token'))->post('http://localhost/laravel-project/public/api/products', $data);
 //        $data = $request->all();
 //        $data['avatar'] = $this->productService->createImage($request);
 //        $checkCreate = $this->productRepository->storeProduct($data);
@@ -45,7 +45,7 @@ class ProductController extends Controller
         }
     }
     public function edit($id){
-        $res = Http::get('http://localhost/laravel-project/public/api/products/'.$id);
+        $res = Http::withToken(session()->get('access_token'))->get('http://localhost/laravel-project/public/api/products/'.$id);
         $product = json_decode($res)->data;
         return view('admin.products.update', compact('product'));
     }
@@ -55,7 +55,7 @@ class ProductController extends Controller
 //        $checkUpdate = $this->productRepository->updateProduct($data, $id);
         $data = $request->all();
         $data['avatar'] = $this->productService->createImage($request);
-        $checkUpdate = Http::asForm()->put('http://localhost/laravel-project/public/api/products/'.$id, $data);
+        $checkUpdate = Http::withToken(session()->get('access_token'))->put('http://localhost/laravel-project/public/api/products/'.$id, $data);
         if (!empty($checkUpdate)) {
             return redirect(url('backend/product'))->with('success', 'Update thành công');
         } else {
