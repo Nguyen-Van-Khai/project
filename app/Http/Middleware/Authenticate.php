@@ -7,7 +7,7 @@ use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\JWT;
 
-class Authenticate extends Middleware
+class Authenticate
 {
     /**
      * Get the path the user should be redirected to when they are not authenticated.
@@ -15,21 +15,15 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
-    protected function redirectTo($request)
+
+    public function handle($request, Closure $next)
     {
-        if (! $request->expectsJson()) {
+        if(!auth()->check()){
             return response()->json([
-                'status'=>400,
-                'message'=>'Chua login'
+                'status' => 404,
+                'message' => 'Chua login'
             ]);
         }
+        return $next($request);
     }
-//    public function handle($request, Closure $next, ...$guards)
-//    {
-//        if (! $request->expectsJson()) {
-//            return response()->json([
-//
-//            ])
-//        }
-//    }
 }
