@@ -2,7 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\JWT;
 
 class Authenticate extends Middleware
 {
@@ -15,7 +18,18 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('login');
+            return response()->json([
+                'status'=>400,
+                'message'=>'Chua login'
+            ]);
         }
     }
+//    public function handle($request, Closure $next, ...$guards)
+//    {
+//        if (! $request->expectsJson()) {
+//            return response()->json([
+//
+//            ])
+//        }
+//    }
 }
