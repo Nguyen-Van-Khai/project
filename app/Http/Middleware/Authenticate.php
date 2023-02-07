@@ -24,6 +24,13 @@ class Authenticate
                 'message' => 'Chua login'
             ]);
         }
+        $payload = auth()->payload();
+        if(time() > $payload('exp')){
+            return response()->json([
+                'status' => 404,
+                'message' => 'Het phien dang nhap'
+            ]);
+        }
         return $next($request);
     }
 }
