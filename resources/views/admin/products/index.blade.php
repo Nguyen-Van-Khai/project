@@ -79,7 +79,10 @@
                         {
                             url: `http://localhost/laravel-project/public/api/products/${id}`,
                             type: 'delete',
-                            data:id,
+                            headers: {
+                                'Authorization': "bearer" + '{{session()->get('access_token')}}'
+                            },
+                            data: {'_token': '{{csrf_token()}}'},
                             success: function (data){
                                 console.log(data);
                             }

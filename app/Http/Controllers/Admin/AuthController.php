@@ -22,6 +22,7 @@ class AuthController extends Controller
             $credentials = $request->only('name', 'password');
             $checkLogin = Http::asForm()->post('http://localhost/laravel-project/public/api/auth/login', $credentials);
             $info = json_decode($checkLogin);
+
             if (!empty($info->access_token)) {
                 session()->put('access_token', $info->access_token);
                 session()->put('expires_in', time());
@@ -33,6 +34,7 @@ class AuthController extends Controller
                 return redirect(url('user/login'))->with('error', 'Sai tai khoan mat khau');
             }
         }
+
         return view('admin.users.login');
     }
 
